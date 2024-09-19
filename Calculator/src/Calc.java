@@ -3,50 +3,11 @@ import java.util.Scanner;
 public class Calc {
     public static void count() {
         double firstNum = inputFirstNum();
-        double secondNum;
 
         while (true) {
             System.out.print("Введите операцию, символ сброса (С) или символ выхода (S):");
             String operation = inputOperation();
-
-            switch (operation.toUpperCase()) {
-                case "C":
-                    System.out.println("Сброс");
-                    firstNum = inputFirstNum();
-                    break;
-                case "S":
-                    System.out.println("Выход из программы..");
-                    System.exit(0);
-            }
-
-            switch (operation) {
-                case "+":
-                    firstNum += inputSecondNum();
-                    break;
-                case "-":
-                    firstNum -= inputSecondNum();
-                    break;
-                case "*":
-                    firstNum *= inputSecondNum();
-                    break;
-                case "/":
-                    secondNum = inputSecondNum();
-                    if (secondNum != 0) {
-                        firstNum /= secondNum;
-                    } else {
-                        System.out.println("Делить на ноль нельзя, калькуль не умеет в высшую математику, пока..");
-                        System.out.println("Сброс");
-                        firstNum = inputFirstNum();
-                    }
-                    break;
-                case "=":
-                    System.out.println(firstNum);
-                    break;
-                default:
-                    System.out.println("Неизвестная операция, сброс");
-                    firstNum = inputFirstNum();
-                    break;
-            }
+            firstNum = solve(firstNum, operation);
         }
     }
 
@@ -61,14 +22,13 @@ public class Calc {
                 switch (scanner.next().toUpperCase()) {
                     case "C":
                         System.out.println("Сброс");
-                        System.out.print("Введите  число,   символ сброса (С) или символ выхода (S):");
                         return inputFirstNum();
                     case "S":
                         System.out.println("Выход из программы..");
                         System.exit(0);
                     default:
                         System.out.println("Неизвестная операция, сброс");
-                        System.out.print("Введите  число,   символ сброса (С) или символ выхода (S):");
+                        return inputFirstNum();
                 }
             }
         }
@@ -85,14 +45,13 @@ public class Calc {
                 switch (scanner.next().toUpperCase()) {
                     case "C":
                         System.out.println("Сброс");
-                        System.out.print("Введите  число,   символ сброса (С) или символ выхода (S):");
-                        return inputFirstNum();
+                        return Double.NaN;
                     case "S":
                         System.out.println("Выход из программы..");
                         System.exit(0);
                     default:
                         System.out.println("Неизвестная операция, сброс");
-                        System.out.print("Введите  число,   символ сброса (С) или символ выхода (S):");
+                        return Double.NaN;
                 }
             }
         }
@@ -102,5 +61,55 @@ public class Calc {
         Scanner scanner = new Scanner(System.in);
         return scanner.next();
     }
-}
 
+    private static double math(double firstNum, double secondNum, String operation) {
+        switch (operation) {
+            case "+":
+                return firstNum + secondNum;
+            case "-":
+                return firstNum - secondNum;
+            case "*":
+                return firstNum * secondNum;
+            case "/":
+                if (secondNum != 0) {
+                    return firstNum / secondNum;
+                } else {
+                    System.out.println("Делить на ноль нельзя, калькуль не умеет в высшую математику, пока..");
+                    System.out.println("Сброс");
+                    return inputFirstNum();
+                }
+        }
+        return firstNum;
+    }
+
+    private static double solve(double firstNum, String operation) {
+        switch (operation.toUpperCase()) {
+            case "+":
+            case "-":
+            case "*":
+            case "/":
+                double secondNum = inputSecondNum();
+                if (Double.isNaN(secondNum)) {
+                    firstNum = inputFirstNum();
+                    break;
+                }
+                firstNum = math(firstNum, secondNum, operation);
+                break;
+            case "=":
+                System.out.println("Ответ:" + firstNum);
+                break;
+            case "C":
+                System.out.println("Сброс");
+                firstNum = inputFirstNum();
+                break;
+            case "S":
+                System.out.println("Выход из программы..");
+                System.exit(0);
+            default:
+                System.out.println("Неизвестная операция, сброс");
+                firstNum = inputFirstNum();
+                break;
+        }
+        return firstNum;
+    }
+}
