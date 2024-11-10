@@ -3,4 +3,4 @@ public class Main {
     Calc.count();
     }
 }
-//удалили коммент
+// коммент
